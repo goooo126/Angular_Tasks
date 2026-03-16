@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TypeScript Assignments – Day 1</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f111a;
+    --surface:   #1a1d2e;
+    --card:      #222640;
+    --border:    #2e3350;
+    --text:      #c9cedc;
+    --heading:   #e2e8f0;
+    --accent:    #7c3aed;
+    --accent2:   #06b6d4;
+    --accent3:   #f59e0b;
+    --green:     #22c55e;
+    --red:       #ef4444;
+    --pink:      #ec4899;
+    --code-bg:   #151829;
+    --code-str:  #a5d6ff;
+    --code-kw:   #c678dd;
+    --code-fn:   #61afef;
+    --code-num:  #d19a66;
+    --code-cmt:  #5c6370;
+    --code-type: #e5c07b;
+    --radius:    12px;
+    --font:      'Segoe UI', system-ui, -apple-system, sans-serif;
+    --mono:      'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--heading);
+    margin-bottom: 0.4em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    color: var(--accent2);
+    margin-bottom: 2em;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    color: var(--heading);
+    margin-bottom: 0.5em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .tag.easy { background: var(--green); color: #000; }
+  .tag.medium { background: var(--accent3); color: #000; }
+  .tag.hard { background: var(--accent); }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+    border-left: 4px solid var(--accent);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+  }
+
+  .question-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .question-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .question-title {
+    font-size: 1.1rem;
+    color: var(--heading);
+    font-weight: 600;
+  }
+
+  .question-details {
+    color: var(--text);
+    margin-top: 8px;
+    padding-left: 48px;
+  }
+
+  .question-details ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .question-details li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 6px;
+  }
+
+  .question-details li::before {
+    content: '\25b8';
+    position: absolute;
+    left: 0;
+    color: var(--accent2);
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    overflow-x: auto;
+    margin: 12px 0;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+  }
+
+  pre code { color: var(--text); }
+
+  p code, li code {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: var(--accent2);
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  .diagram-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-top: 16px;
+  }
+
+  .diagram-section h3 {
+    font-size: 1rem;
+    color: var(--accent2);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  /* UML Diagram Styles */
+  .uml-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+  }
+
+  .uml-row {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .uml-class {
+    border: 2px solid var(--accent2);
+    border-radius: 8px;
+    min-width: 200px;
+    background: var(--card);
+    overflow: hidden;
+  }
+
+  .uml-class.interface-box {
+    border-color: var(--accent3);
+  }
+
+  .uml-class-name {
+    background: var(--accent2);
+    color: #000;
+    font-weight: 700;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+  }
+
+  .uml-class.interface-box .uml-class-name {
+    background: var(--accent3);
+  }
+
+  .uml-stereotype {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--accent3);
+    padding: 4px 0 0;
+    font-style: italic;
+  }
+
+  .uml-section {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+
+  .uml-section div {
+    padding: 2px 0;
+  }
+
+  .uml-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--accent2);
+  }
+
+  .uml-connector .line {
+    width: 2px;
+    height: 30px;
+    background: var(--accent2);
+  }
+
+  .uml-connector .triangle {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 14px solid var(--accent2);
+  }
+
+  .uml-connector-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .uml-h-line {
+    height: 2px;
+    width: 80px;
+    background: var(--accent2);
+  }
+
+  .uml-label {
+    font-size: 0.7rem;
+    color: var(--accent3);
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 700px) {
+    .container { padding: 30px 16px; }
+    .uml-row { flex-direction: column; align-items: center; }
+    .uml-h-line { width: 2px; height: 40px; }
+    .uml-connector-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>TypeScript Assignments</h1>
+  <p class="subtitle">Day 1 &mdash; Practice Exercises</p>
+
+  <!-- Question 1 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span class="question-number">1</span>
+      <span class="question-title">Create an array that accepts <code>number</code> only</span>
+    </div>
+  </div>
+
+  <!-- Question 2 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span class="question-number">2</span>
+      <span class="question-title">Create an array that accepts <code>string</code> and <code>number</code> only and print all items</span>
+    </div>
+  </div>
+
+  <!-- Question 3 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span class="question-number">3</span>
+      <span class="question-title">Create a variable that accepts <code>number</code> and <code>boolean</code> only</span>
+    </div>
+  </div>
+
+  <!-- Question 4 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span class="question-number">4</span>
+      <span class="question-title">Create a function with two parameters, try to call it without any parameter &mdash; "handling"</span>
+    </div>
+  </div>
+
+  <!-- Question 5 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span class="question-number">5</span>
+      <span class="question-title">Create class <code>Employee</code> that implements <code>IEmployee</code> using this object:</span>
+    </div>
+    <div class="question-details">
+<pre><code>{
+  "id": 1,
+  "name": "Leanne Graham",
+  "username": "Bret",
+  "email": "Sincere@april.biz",
+  "address": {
+    "street": "Kulas Light",
+    "suite": "Apt. 556",
+    "city": "Gwenborough",
+    "zipcode": "92998-3874",
+    "geo": {
+      "lat": "-37.3159",
+      "lng": "81.1496"
+    }
+  }
+}</code></pre>
+      <ul>
+        <li><code>username</code> &rarr; <strong>private</strong></li>
+        <li><code>address</code> &rarr; <strong>public</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Question 6 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span class="question-number">6</span>
+      <span class="question-title">Create class <code>Manager</code> that inherits from the <code>Employee</code> class</span>
+    </div>
+    <div class="question-details">
+      <ul>
+        <li>Create a function to view the employee address</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Question 7 -->
+  <div class="question-card" style="border-left-color: var(--accent3);">
+    <div class="question-header">
+      <span class="question-number" style="background: var(--accent3); color: #000;">7</span>
+      <span class="question-title">Implement the following UML diagram</span>
+    </div>
+
+    <div class="diagram-section">
+      <h3>Class Diagram</h3>
+      <div class="uml-diagram">
+
+        <!-- Interface: IAccount -->
+        <div class="uml-row">
+          <div class="uml-class interface-box">
+            <div class="uml-stereotype">&laquo;IAccount&raquo;</div>
+            <div class="uml-class-name">IAccount</div>
+            <div class="uml-section">
+              <div>Date_of_opening</div>
+            </div>
+            <div class="uml-section">
+              <div>addCustomer()</div>
+              <div>removeCustomer()</div>
+            </div>
+          </div>
+
+          <div class="uml-class">
+            <div class="uml-class-name">Account</div>
+            <div class="uml-section">
+              <div>Acc_no</div>
+              <div>Balance</div>
+            </div>
+            <div class="uml-section">
+              <div>debitAmount()</div>
+              <div>creditAmount()</div>
+              <div>getBalance()</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connector -->
+        <div class="uml-connector">
+          <div class="triangle"></div>
+          <div class="line"></div>
+        </div>
+
+        <!-- Child Classes -->
+        <div class="uml-row">
+          <div>
+            <div class="uml-label">&laquo;IAccount&raquo;</div>
+            <div class="uml-class interface-box">
+              <div class="uml-class-name">Saving_Account</div>
+              <div class="uml-section">
+                <div>Min_Balance</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="uml-label">&laquo;IAccount&raquo;</div>
+            <div class="uml-class interface-box">
+              <div class="uml-class-name">Current_Account</div>
+              <div class="uml-section">
+                <div>Interest_rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Explanation -->
+      <div style="margin-top: 24px; font-size: 0.9rem; color: var(--text);">
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding-left: 20px; position: relative; margin-bottom: 6px;">
+            <span style="position: absolute; left: 0; color: var(--accent2);">&#9656;</span>
+            <code>Account</code> is the base class with <code>Acc_no</code>, <code>Balance</code>, and methods: <code>debitAmount()</code>, <code>creditAmount()</code>, <code>getBalance()</code>
+          </li>
+          <li style="padding-left: 20px; position: relative; margin-bottom: 6px;">
+            <span style="position: absolute; left: 0; color: var(--accent2);">&#9656;</span>
+            <code>IAccount</code> is an interface with <code>Date_of_opening</code>, <code>addCustomer()</code>, and <code>removeCustomer()</code>
+          </li>
+          <li style="padding-left: 20px; position: relative; margin-bottom: 6px;">
+            <span style="position: absolute; left: 0; color: var(--accent2);">&#9656;</span>
+            <code>Saving_Account</code> extends <code>Account</code> and implements <code>IAccount</code> &mdash; adds <code>Min_Balance</code>
+          </li>
+          <li style="padding-left: 20px; position: relative; margin-bottom: 6px;">
+            <span style="position: absolute; left: 0; color: var(--accent2);">&#9656;</span>
+            <code>Current_Account</code> extends <code>Account</code> and implements <code>IAccount</code> &mdash; adds <code>Interest_rate</code>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
