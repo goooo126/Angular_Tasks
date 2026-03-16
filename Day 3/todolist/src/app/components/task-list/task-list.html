@@ -1,0 +1,62 @@
+<div class="container">
+  <h1>Product Catalog</h1>
+  <p class="subtitle">Today's date: Mar 17, 2026 — {{ products.length }} products found</p>
+
+  <div class="filter-container">
+    <label for="cat-select">Category : </label>
+    <select
+      id="cat-select"
+      class="category-select"
+      [(ngModel)]="selectedCategory"
+      (change)="filter()"
+    >
+      <option value="all">All</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Clothing">Clothing</option>
+      <option value="Books">Books</option>
+    </select>
+  </div>
+
+  <table class="product-table">
+    <thead>
+      <tr>
+        <th width="5%">#</th>
+        <th width="35%">Product</th>
+        <th width="25%">Category</th>
+        <th width="15%">Price</th>
+        <th width="10%">Qty</th>
+        <th width="10%">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of filteredProducts; track product.id) {
+        @if (product.quantity === 0) {
+          <tr class="muted-row">
+            <td>—</td>
+            <td colspan="4" class="centered-italic">{{ product.name }} hidden (Qty = 0)</td>
+            <td><button class="sold-out-btn" disabled>SoldOut</button></td>
+          </tr>
+        } @else {
+          <tr [class.highlighted-row]="product.quantity === 1">
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ getCategoryName(product.categoryId) }}</td>
+
+            <td
+              [class.text-orange]="product.quantity === 1"
+              [class.text-green]="product.quantity > 1"
+            >
+              {{ product.price | currency }}
+            </td>
+
+            <td>{{ product.quantity }}</td>
+
+            <td>
+              <button class="buy-btn" (click)="buyProduct(product)">Buy</button>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

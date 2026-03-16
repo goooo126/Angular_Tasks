@@ -1,0 +1,123 @@
+.container {
+    padding: 40px 8%;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #6a6a8a;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.category-dropdown {
+    background-color: #1e1e3f;
+    border: 1px solid #333355;
+    padding: 10px 15px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 40px;
+    font-size: 14px;
+}
+
+/* Table Styling */
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-table th {
+    text-align: left;
+    color: #4db8ff; /* Light blue headers */
+    padding: 15px;
+    border-bottom: 1px solid #2a2a4a;
+    font-size: 14px;
+}
+
+.product-table td {
+    padding: 15px;
+    border-bottom: 1px solid #252545;
+    font-size: 15px;
+}
+
+.filter-container {
+    background-color: #1e1e3f;
+    border: 1px solid #333355;
+    padding: 8px 15px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 40px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.filter-container label {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.category-select {
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    appearance: none; /* Removes default browser styling */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 20px;
+    /* This adds the custom arrow ▾ back in as a background image */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 10px;
+}
+
+/* Styling the dropdown options (works best in Chrome/Edge) */
+.category-select option {
+    background-color: #1e1e3f;
+    color: white;
+}
+
+/* Rows & Accents */
+.highlighted-row {
+    background-color: rgba(251, 191, 36, 0.08); /* Faint orange glow */
+    color: #fbbf24;
+}
+
+.muted-row {
+    color: #555575;
+}
+
+.centered-italic {
+    text-align: center;
+    font-style: italic;
+}
+
+.text-green { color: #4ade80; font-weight: bold; }
+.text-orange { color: #fbbf24; font-weight: bold; }
+
+/* Buttons */
+.buy-btn {
+    background: #7b42f5;
+    color: white;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.sold-out-btn {
+    background: #252545;
+    color: #444466;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: not-allowed;
+}

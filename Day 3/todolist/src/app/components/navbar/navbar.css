@@ -1,0 +1,25 @@
+.shop-navbar{
+  background:#e5092f;
+  padding-top:14px;
+  padding-bottom:14px;
+}
+
+.navbar-brand{
+  font-size:20px;
+}
+
+.navbar-nav .nav-link{
+  color:white;
+  opacity:.9;
+  margin-left:20px;
+  padding-bottom:6px;
+}
+
+.navbar-nav .nav-link:hover{
+  color:white;
+  opacity:1;
+}
+
+.navbar-nav .nav-link.active{
+  border-bottom:3px solid white;
+}

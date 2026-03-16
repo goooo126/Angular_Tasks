@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Day 2 – Lab Assignment</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0f111a;--surface:#1a1d2e;--card:#222640;--border:#2e3350;
+--text:#c9cedc;--heading:#e2e8f0;--accent:#7c3aed;--accent2:#06b6d4;
+--accent3:#f59e0b;--green:#22c55e;--red:#ef4444;
+--code-bg:#151829;--code-str:#a5d6ff;--code-kw:#c678dd;--code-fn:#61afef;
+--code-num:#d19a66;--code-cmt:#5c6370;--code-type:#e5c07b;
+--angular:#dd0031;--radius:12px;
+--font:'Segoe UI',system-ui,-apple-system,sans-serif;
+--mono:'Cascadia Code','Fira Code','Consolas',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7}
+code{font-family:var(--mono);font-size:.88rem}
+p code,li code,td code{background:var(--card);padding:2px 7px;border-radius:5px;font-size:.85em;color:var(--accent2)}
+h1{font-size:2rem;color:var(--heading);font-weight:700}
+h2{font-size:1.4rem;color:var(--heading);font-weight:700;margin-bottom:.4em}
+h3{font-size:1rem;color:var(--accent2);font-weight:600;margin:1.2em 0 .4em;text-transform:uppercase;letter-spacing:.04em}
+p{margin-bottom:.5em}
+ul,ol{padding-left:1.4em;margin-bottom:.8em}
+li{margin-bottom:.4em}
+.container{max-width:900px;margin:0 auto;padding:30px 24px 80px}
+
+/* Header */
+.lab-header{text-align:center;padding:40px 20px 30px;background:linear-gradient(135deg,#1a0a2e 0%,var(--bg) 60%);border-bottom:2px solid var(--angular);margin-bottom:30px}
+.lab-header h1{background:linear-gradient(135deg,var(--angular),var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.2em}
+.lab-header p{color:var(--accent2);font-size:1.1rem}
+.lab-badge{display:inline-block;background:var(--angular);color:#fff;padding:4px 16px;border-radius:20px;font-size:.8rem;font-weight:700;margin-bottom:12px}
+
+/* Mockup */
+.mockup{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:30px}
+.mockup-title{background:var(--card);padding:10px 16px;font-size:.85rem;color:var(--accent2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.mockup-body{padding:0}
+
+/* Fake browser */
+.browser-bar{background:#1e2235;padding:8px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.browser-dots{display:flex;gap:6px}
+.browser-dots span{width:10px;height:10px;border-radius:50%}
+.browser-dots span:nth-child(1){background:#ef4444}
+.browser-dots span:nth-child(2){background:#f59e0b}
+.browser-dots span:nth-child(3){background:#22c55e}
+.browser-url{background:var(--card);padding:4px 14px;border-radius:6px;font-family:var(--mono);font-size:.75rem;color:var(--code-cmt);flex:1;margin-left:8px}
+
+/* Fake app */
+.fake-navbar{background:var(--angular);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.9rem}
+.fake-navbar .nav-links{display:flex;gap:16px;font-size:.8rem;font-weight:400}
+.fake-navbar .nav-links span{opacity:.7}
+.fake-navbar .nav-links span.active{opacity:1;border-bottom:2px solid #fff;padding-bottom:2px}
+
+.fake-content{padding:20px}
+.fake-content h2{color:var(--heading);font-size:1rem;margin-bottom:4px;font-family:var(--font)}
+.fake-content .subtitle{color:var(--code-cmt);font-size:.75rem;margin-bottom:12px}
+
+.fake-select{background:var(--card);border:1px solid var(--border);padding:6px 12px;border-radius:6px;color:var(--text);font-family:var(--font);font-size:.8rem;margin-bottom:16px;display:inline-block}
+
+.fake-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.fake-table th{background:var(--card);color:var(--accent2);padding:8px 12px;text-align:left;font-weight:600;border-bottom:1px solid var(--border)}
+.fake-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.fake-table tr.low-stock{background:#f59e0b18}
+.fake-table tr.low-stock td{color:var(--accent3)}
+.fake-table .buy-btn{background:var(--accent);color:#fff;border:none;padding:3px 12px;border-radius:4px;font-size:.72rem;font-weight:600;cursor:pointer}
+.fake-table .buy-btn.disabled{background:var(--card);color:var(--code-cmt);cursor:not-allowed}
+.fake-table .price{color:var(--green);font-weight:600}
+.fake-table .qty-zero{color:var(--red);font-weight:600}
+
+.fake-footer{background:var(--card);padding:8px 20px;text-align:center;font-size:.72rem;color:var(--code-cmt);border-top:1px solid var(--border)}
+
+/* Requirements */
+.req-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px}
+.req-section h2{display:flex;align-items:center;gap:10px}
+.req-number{background:var(--angular);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0}
+
+.concept-tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-left:6px}
+.concept-tag.binding{background:#7c3aed22;color:var(--accent)}
+.concept-tag.directive{background:#06b6d422;color:var(--accent2)}
+.concept-tag.pipe{background:#22c55e22;color:var(--green)}
+.concept-tag.event{background:#f59e0b22;color:var(--accent3)}
+.concept-tag.component{background:#dd003122;color:var(--angular)}
+
+.hint-box{background:linear-gradient(135deg,#0f1f1a,var(--surface));border-left:4px solid var(--green);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;margin-top:.6em;font-size:.88rem}
+.hint-box strong{color:var(--green)}
+
+.warn-box{background:linear-gradient(135deg,#1f1a0f,var(--surface));border-left:4px solid var(--accent3);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;margin-top:.6em;font-size:.88rem}
+.warn-box strong{color:var(--accent3)}
+
+/* Data section */
+.data-block{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin:.6em 0;font-family:var(--mono);font-size:.82rem;line-height:1.8;overflow-x:auto}
+
+/* Checklist */
+.checklist{list-style:none;padding:0}
+.checklist li{padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;display:flex;align-items:center;gap:10px;font-size:.9rem}
+.checklist li::before{content:'☐';font-size:1.1rem;color:var(--accent2)}
+.checklist li .concepts{margin-left:auto;display:flex;gap:4px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="lab-header">
+<span class="lab-badge">Day 2</span>
+<h1>Lab Assignment</h1>
+<p>E-Commerce Product Browser</p>
+</div>
+
+<div class="container">
+
+<!-- MOCKUP -->
+<div class="mockup">
+<div class="mockup-title">
+<span>🎯</span> What you'll build — Final Result
+</div>
+<div class="mockup-body">
+<div class="browser-bar">
+<div class="browser-dots"><span></span><span></span><span></span></div>
+<div class="browser-url">localhost:4200</div>
+</div>
+
+<!-- Fake App -->
+<div class="fake-navbar">
+<span>ShopApp</span>
+<div class="nav-links">
+<span class="active">Products</span>
+<span>About</span>
+<span>Contact</span>
+</div>
+</div>
+
+<div class="fake-content">
+<h2>Product Catalog</h2>
+<p class="subtitle">Today's date: Mar 17, 2026 — 5 products found</p>
+
+<div class="fake-select">Category: <strong>Electronics</strong> ▾</div>
+
+<table class="fake-table">
+<thead>
+<tr>
+<th>#</th>
+<th>Product</th>
+<th>Category</th>
+<th>Price</th>
+<th>Qty</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>IPHONE 15 PRO</td>
+<td>Electronics</td>
+<td class="price">$1,299.00</td>
+<td>5</td>
+<td><span class="buy-btn">Buy</span></td>
+</tr>
+<tr class="low-stock">
+<td>2</td>
+<td>SAMSUNG GALAXY S24</td>
+<td>Electronics</td>
+<td class="price">$999.00</td>
+<td style="color:var(--accent3);font-weight:700">1</td>
+<td><span class="buy-btn">Buy</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td>MACBOOK PRO M3</td>
+<td>Electronics</td>
+<td class="price">$2,499.00</td>
+<td>3</td>
+<td><span class="buy-btn">Buy</span></td>
+</tr>
+<tr>
+<td style="color:var(--code-cmt)">—</td>
+<td colspan="4" style="color:var(--code-cmt);font-style:italic;text-align:center">Sony WH-1000XM5 hidden (Qty = 0)</td>
+<td><span class="buy-btn disabled">Sold Out</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="fake-footer">
+&copy; 2026 ShopApp — Built with Angular
+</div>
+</div>
+</div>
+
+<!-- SAMPLE DATA -->
+<div class="req-section">
+<h2>📦 Sample Data</h2>
+<p>Use this data in your components. Create <code>ICategory</code> and <code>IProduct</code> interfaces first.</p>
+
+<h3>ICategory Interface</h3>
+<div class="data-block">
+<span style="color:var(--code-kw)">export interface</span> <span style="color:var(--code-type)">ICategory</span> {<br>
+&nbsp;&nbsp;id: <span style="color:var(--code-type)">number</span>;<br>
+&nbsp;&nbsp;name: <span style="color:var(--code-type)">string</span>;<br>
+}
+</div>
+
+<h3>IProduct Interface</h3>
+<div class="data-block">
+<span style="color:var(--code-kw)">export interface</span> <span style="color:var(--code-type)">IProduct</span> {<br>
+&nbsp;&nbsp;id: <span style="color:var(--code-type)">number</span>;<br>
+&nbsp;&nbsp;name: <span style="color:var(--code-type)">string</span>;<br>
+&nbsp;&nbsp;price: <span style="color:var(--code-type)">number</span>;<br>
+&nbsp;&nbsp;quantity: <span style="color:var(--code-type)">number</span>;<br>
+&nbsp;&nbsp;categoryId: <span style="color:var(--code-type)">number</span>;<br>
+&nbsp;&nbsp;date: <span style="color:var(--code-type)">string</span>;<br>
+}
+</div>
+
+<h3>Categories</h3>
+<div class="data-block">
+categories: <span style="color:var(--code-type)">ICategory</span>[] = [<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">1</span>, name: <span style="color:var(--code-str)">'Electronics'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">2</span>, name: <span style="color:var(--code-str)">'Clothing'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">3</span>, name: <span style="color:var(--code-str)">'Books'</span> }<br>
+];
+</div>
+
+<h3>Products</h3>
+<div class="data-block">
+products: <span style="color:var(--code-type)">IProduct</span>[] = [<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">1</span>, name: <span style="color:var(--code-str)">'iPhone 15 Pro'</span>, price: <span style="color:var(--code-num)">1299</span>, quantity: <span style="color:var(--code-num)">5</span>, categoryId: <span style="color:var(--code-num)">1</span>, date: <span style="color:var(--code-str)">'2026-03-17'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">2</span>, name: <span style="color:var(--code-str)">'Samsung Galaxy S24'</span>, price: <span style="color:var(--code-num)">999</span>, quantity: <span style="color:var(--code-num)">1</span>, categoryId: <span style="color:var(--code-num)">1</span>, date: <span style="color:var(--code-str)">'2026-03-16'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">3</span>, name: <span style="color:var(--code-str)">'MacBook Pro M3'</span>, price: <span style="color:var(--code-num)">2499</span>, quantity: <span style="color:var(--code-num)">3</span>, categoryId: <span style="color:var(--code-num)">1</span>, date: <span style="color:var(--code-str)">'2026-03-15'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">4</span>, name: <span style="color:var(--code-str)">'Sony WH-1000XM5'</span>, price: <span style="color:var(--code-num)">349</span>, quantity: <span style="color:var(--code-num)">0</span>, categoryId: <span style="color:var(--code-num)">1</span>, date: <span style="color:var(--code-str)">'2026-03-14'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">5</span>, name: <span style="color:var(--code-str)">'Nike Air Max'</span>, price: <span style="color:var(--code-num)">180</span>, quantity: <span style="color:var(--code-num)">12</span>, categoryId: <span style="color:var(--code-num)">2</span>, date: <span style="color:var(--code-str)">'2026-03-10'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">6</span>, name: <span style="color:var(--code-str)">'Levi\'s 501 Jeans'</span>, price: <span style="color:var(--code-num)">69.99</span>, quantity: <span style="color:var(--code-num)">8</span>, categoryId: <span style="color:var(--code-num)">2</span>, date: <span style="color:var(--code-str)">'2026-03-12'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">7</span>, name: <span style="color:var(--code-str)">'Clean Code'</span>, price: <span style="color:var(--code-num)">44.99</span>, quantity: <span style="color:var(--code-num)">20</span>, categoryId: <span style="color:var(--code-num)">3</span>, date: <span style="color:var(--code-str)">'2026-02-28'</span> },<br>
+&nbsp;&nbsp;{ id: <span style="color:var(--code-num)">8</span>, name: <span style="color:var(--code-str)">'Angular in Action'</span>, price: <span style="color:var(--code-num)">39.99</span>, quantity: <span style="color:var(--code-num)">0</span>, categoryId: <span style="color:var(--code-num)">3</span>, date: <span style="color:var(--code-str)">'2026-01-15'</span> }<br>
+];
+</div>
+</div>
+
+<!-- REQUIREMENTS -->
+<h2 style="margin-bottom:16px">📋 Requirements</h2>
+
+<!-- Req 1 -->
+<div class="req-section">
+<h2><span class="req-number">1</span> Create Components</h2>
+<p>Generate three components using the Angular CLI:</p>
+<ul>
+<li><code>NavbarComponent</code> — displays the app name and navigation links</li>
+<li><code>ProductsComponent</code> — the main component (all logic lives here)</li>
+<li><code>FooterComponent</code> — displays copyright with the current year</li>
+</ul>
+<p>Use them in <code>app.component.html</code>.</p>
+<p style="margin-top:.5em"><span class="concept-tag component">Components</span> <span class="concept-tag binding">Interpolation</span></p>
+</div>
+
+<!-- Req 2 -->
+<div class="req-section">
+<h2><span class="req-number">2</span> Create Interfaces</h2>
+<p>Create <code>ICategory</code> and <code>IProduct</code> interfaces in a <code>models/</code> folder. Use the sample data above.</p>
+</div>
+
+<!-- Req 3 -->
+<div class="req-section">
+<h2><span class="req-number">3</span> Category Dropdown with Two-Way Binding</h2>
+<p>Add a <code>&lt;select&gt;</code> dropdown that lists all categories. When the user selects a category, filter and display only the products that belong to that category in the table.</p>
+<ul>
+<li>Use <code>[(ngModel)]</code> to bind the selected category ID to a component property</li>
+<li>Don't forget to import <code>FormsModule</code> in <code>app.module.ts</code></li>
+<li>Create a getter or method that returns filtered products based on the selected category</li>
+</ul>
+<p style="margin-top:.5em"><span class="concept-tag binding">Two-Way Binding</span> <span class="concept-tag event">Event Binding</span></p>
+</div>
+
+<!-- Req 4 -->
+<div class="req-section">
+<h2><span class="req-number">4</span> Display Products in a Table</h2>
+<p>Use <code>*ngFor</code> to loop through the filtered products and display them in a table with columns:</p>
+<ul>
+<li><strong>#</strong> — Row number (use <code>let i = index</code>)</li>
+<li><strong>Product Name</strong></li>
+<li><strong>Category</strong></li>
+<li><strong>Price</strong></li>
+<li><strong>Quantity</strong></li>
+<li><strong>Action</strong> (Buy button)</li>
+</ul>
+<p style="margin-top:.5em"><span class="concept-tag directive">*ngFor</span> <span class="concept-tag binding">Interpolation</span></p>
+</div>
+
+<!-- Req 5 -->
+<div class="req-section">
+<h2><span class="req-number">5</span> Hide Products with Quantity = 0</h2>
+<p>Products with <code>quantity === 0</code> should be <strong>hidden</strong> from the table. Use the <code>*ngIf</code> directive on the table row.</p>
+<p style="margin-top:.5em"><span class="concept-tag directive">*ngIf</span></p>
+</div>
+
+<!-- Req 6 -->
+<div class="req-section">
+<h2><span class="req-number">6</span> Conditional Row Styling</h2>
+<p>Change the row background color based on the product's quantity:</p>
+<ul>
+<li><strong>Quantity = 1</strong> → Background color: <span style="color:#f59e0b;font-weight:700">yellow</span> (last item warning)</li>
+<li><strong>Quantity > 1</strong> → Default background (no special color)</li>
+</ul>
+<p>Use <code>[ngClass]</code> or <code>[ngStyle]</code> or <code>[style.background]</code> on the <code>&lt;tr&gt;</code> element.</p>
+<p style="margin-top:.5em"><span class="concept-tag binding">Class Binding</span> <span class="concept-tag binding">Style Binding</span> <span class="concept-tag binding">ngClass</span></p>
+</div>
+
+<!-- Req 7 -->
+<div class="req-section">
+<h2><span class="req-number">7</span> Buy Button</h2>
+<p>Add a <strong>Buy</strong> button on each product row. When clicked:</p>
+<ul>
+<li>Decrease the product's <code>quantity</code> by 1</li>
+<li>When quantity reaches 0, the row should disappear (because of requirement 5)</li>
+<li>When quantity reaches 1, the row should turn yellow (because of requirement 6)</li>
+<li>Disable the button when quantity = 0</li>
+</ul>
+<p style="margin-top:.5em"><span class="concept-tag event">Event Binding</span> <span class="concept-tag binding">Property Binding</span></p>
+</div>
+
+<!-- Req 8 - PIPES -->
+<div class="req-section">
+<h2><span class="req-number">8</span> Pipes — Format the Display</h2>
+<p>Use Angular's built-in pipes to format data in the template:</p>
+<ul>
+<li><strong>Product name</strong> → Display in UPPERCASE using the <code>uppercase</code> pipe</li>
+<li><strong>Price</strong> → Format as currency using <code>currency:'USD'</code> pipe<br>
+<span style="color:var(--code-cmt);font-size:.85rem">Example: 1299 → $1,299.00</span></li>
+<li><strong>Date</strong> → Format using <code>date:'mediumDate'</code> pipe<br>
+<span style="color:var(--code-cmt);font-size:.85rem">Example: 2026-03-17 → Mar 17, 2026</span></li>
+<li><strong>Footer</strong> → Display today's date using the <code>date</code> pipe</li>
+<li><strong>Products count</strong> → Show "Showing X products" in the header subtitle using interpolation</li>
+</ul>
+<p style="margin-top:.5em"><span class="concept-tag pipe">uppercase</span> <span class="concept-tag pipe">currency</span> <span class="concept-tag pipe">date</span></p>
+</div>
+
+
+<!-- CHECKLIST -->
+<h2 style="margin:24px 0 12px">✅ Submission Checklist</h2>
+<ul class="checklist">
+<li>
+Navbar, Products, Footer components created
+<span class="concepts"><span class="concept-tag component">Components</span></span>
+</li>
+<li>
+ICategory and IProduct interfaces in models/ folder
+</li>
+<li>
+Category dropdown filters products with [(ngModel)]
+<span class="concepts"><span class="concept-tag binding">Two-Way</span></span>
+</li>
+<li>
+Products displayed in a table with *ngFor
+<span class="concepts"><span class="concept-tag directive">*ngFor</span></span>
+</li>
+<li>
+Quantity = 0 products hidden with *ngIf
+<span class="concepts"><span class="concept-tag directive">*ngIf</span></span>
+</li>
+<li>
+Quantity = 1 rows highlighted yellow
+<span class="concepts"><span class="concept-tag binding">ngClass</span></span>
+</li>
+<li>
+Buy button decreases quantity
+<span class="concepts"><span class="concept-tag event">Event</span></span>
+</li>
+<li>
+Product names in UPPERCASE
+<span class="concepts"><span class="concept-tag pipe">Pipe</span></span>
+</li>
+<li>
+Prices formatted as currency
+<span class="concepts"><span class="concept-tag pipe">Pipe</span></span>
+</li>
+<li>
+Dates formatted with date pipe
+<span class="concepts"><span class="concept-tag pipe">Pipe</span></span>
+</li>
+</ul>
+
+
+</div>
+</body>
+</html>

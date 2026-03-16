@@ -1,0 +1,32 @@
+<h2>My Tasks ({{filteredTasks.length}})</h2>
+<div class="filter">
+<h4>filter by Priority: </h4>
+<select [(ngModel)]="selectedPriority" (change)="filter()">
+    <option value="all">All</option>
+    <option value="high">High</option>
+    <option value="medium">Medium</option>
+    <option value="low">Low</option>
+</select>
+</div>
+<!-- input -->
+ <div class="add-task">
+    <input type="text" placeholder="Enter Your Task" #taskName>
+    <button (click)="addTask(taskName.value)">Add</button>
+ </div>
+
+<p class="empty" *ngIf="filteredTasks.length===0">NO Tasks yet, Please add ur task</p>
+<ul class="task-list">
+    <li *ngFor="let task of filteredTasks;let i=index" [class.completed]="task.done">
+        <input type="checkbox" [checked]="task.done" (change)="toggleDone(task.id)">
+        <span
+        [ngClass]="{
+            'badge-high':task.priority==='high',
+            'badge-medium':task.priority==='medium',
+            'badge-low':task.priority==='low',
+        }"
+        >{{task.priority | uppercase}}</span>
+        <span class="date">{{task.dueDate | date:'shortDate'}}</span>
+        <span class="task-name">{{task.name | titlecase}}</span>
+        <button class="delete-btn" (click)="deleteTask((task.id))">X</button>
+    </li>
+</ul>
