@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Angular Day 1 – Lab Assignment</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0f111a;--surface:#1a1d2e;--card:#222640;--border:#2e3350;
+--text:#c9cedc;--heading:#e2e8f0;--accent:#7c3aed;--accent2:#06b6d4;
+--accent3:#f59e0b;--green:#22c55e;--red:#ef4444;--pink:#ec4899;
+--code-bg:#151829;--code-str:#a5d6ff;--code-kw:#c678dd;--code-fn:#61afef;
+--code-num:#d19a66;--code-cmt:#5c6370;--code-type:#e5c07b;
+--angular:#dd0031;--radius:12px;
+--font:'Segoe UI',system-ui,-apple-system,sans-serif;
+--mono:'Cascadia Code','Fira Code','Consolas',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;padding:40px 20px 100px}
+.container{max-width:900px;margin:0 auto}
+
+/* Header */
+.lab-header{text-align:center;padding:50px 20px 40px;margin-bottom:40px;border-bottom:2px solid var(--angular);position:relative}
+.lab-header h1{font-size:clamp(2rem,5vw,3rem);color:var(--heading);margin-bottom:.2em;font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,var(--angular),var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lab-header .subtitle{font-size:1.2rem;color:var(--accent2);margin-bottom:1em}
+.lab-header .project-name{display:inline-block;background:var(--angular);color:#fff;padding:6px 20px;border-radius:25px;font-size:1rem;font-weight:700;font-family:var(--mono);letter-spacing:.04em}
+.lab-header .description{margin-top:1em;font-size:.95rem;max-width:650px;margin-left:auto;margin-right:auto;color:var(--text)}
+
+/* Section (Question) */
+.question{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px;margin-bottom:28px;position:relative;transition:border-color .2s}
+.question:hover{border-color:var(--accent)}
+.question-number{position:absolute;top:-14px;left:24px;background:var(--accent);color:#fff;padding:4px 16px;border-radius:20px;font-size:.8rem;font-weight:700;font-family:var(--mono)}
+.question h2{font-size:1.35rem;color:var(--heading);margin-bottom:.6em;display:flex;align-items:center;gap:10px;font-weight:700}
+.question h3{color:var(--accent2);font-size:.9rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin:1em 0 .5em}
+
+/* Tags */
+.tag{display:inline-block;padding:3px 12px;border-radius:20px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-right:6px;margin-bottom:6px}
+.tag.cli{background:var(--accent2);color:#000}
+.tag.code{background:var(--accent);color:#fff}
+.tag.html{background:var(--angular);color:#fff}
+.tag.bonus{background:var(--accent3);color:#000}
+.tag.model{background:var(--green);color:#000}
+
+/* Lists */
+ol,ul{padding-left:1.5em;margin-bottom:.8em}
+li{margin-bottom:.45em}
+li strong{color:var(--heading)}
+
+/* Code */
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;overflow-x:auto;margin:.8em 0;font-size:.85rem;line-height:1.65}
+code{font-family:var(--mono);font-size:.85rem}
+pre code{color:var(--text)}
+p code,li code,td code{background:var(--card);padding:2px 7px;border-radius:5px;font-size:.83em;color:var(--accent2)}
+.kw{color:var(--code-kw)}.fn{color:var(--code-fn)}.str{color:var(--code-str)}.num{color:var(--code-num)}.cmt{color:var(--code-cmt);font-style:italic}.tp{color:var(--code-type)}.dec{color:var(--accent3)}.ang{color:var(--angular)}
+
+/* Boxes */
+.goal-box{background:linear-gradient(135deg,#0f1f1a,var(--surface));border-left:4px solid var(--green);padding:16px 20px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:1em}
+.goal-box strong{color:var(--green)}
+.hint-box{background:linear-gradient(135deg,#1a1525,var(--surface));border-left:4px solid var(--accent);padding:14px 20px;border-radius:0 var(--radius) var(--radius) 0;margin:.8em 0}
+.hint-box strong{color:var(--accent)}
+.note-box{background:linear-gradient(135deg,#1f1a0f,var(--surface));border-left:4px solid var(--accent3);padding:14px 20px;border-radius:0 var(--radius) var(--radius) 0;margin:.8em 0}
+.note-box strong{color:var(--accent3)}
+
+/* Table */
+table{width:100%;border-collapse:collapse;margin:.8em 0;font-size:.88rem}
+th,td{padding:10px 16px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--accent2);font-weight:600;background:var(--surface)}
+tr:hover td{background:rgba(124,58,237,.05)}
+
+/* Layout diagram */
+.layout-diagram{display:grid;gap:0;border:2px solid var(--accent2);border-radius:var(--radius);overflow:hidden;margin:1em 0;font-family:var(--mono);font-size:.85rem;font-weight:600;text-align:center}
+.layout-diagram .row{display:grid;border-bottom:1px solid var(--border)}
+.layout-diagram .row:last-child{border-bottom:none}
+.layout-diagram .cell{padding:20px 16px;background:var(--card);border-right:1px solid var(--border)}
+.layout-diagram .cell:last-child{border-right:none}
+.layout-diagram .full{grid-column:1/-1}
+.layout-diagram .header-cell{background:var(--angular);color:#fff}
+.layout-diagram .nav-cell{background:var(--accent);color:#fff}
+.layout-diagram .sidebar-cell{background:var(--surface);color:var(--accent2)}
+.layout-diagram .content-cell{background:var(--card);color:var(--heading)}
+.layout-diagram .footer-cell{background:var(--surface);color:var(--text)}
+
+/* Tree */
+.tree{font-family:var(--mono);font-size:.85rem;background:var(--code-bg);padding:16px 20px;border-radius:var(--radius);border:1px solid var(--border);margin:.8em 0;line-height:1.8}
+.tree .folder{color:var(--accent3)}
+.tree .file{color:var(--accent2)}
+.tree .component{color:var(--angular)}
+
+/* Divider */
+.section-divider{text-align:center;padding:30px 0;margin:10px 0}
+.section-divider .line{width:80px;height:3px;background:linear-gradient(90deg,var(--angular),var(--accent2));border-radius:2px;margin:0 auto 12px}
+.section-divider span{font-size:.8rem;color:var(--code-cmt);text-transform:uppercase;letter-spacing:.1em}
+
+/* Expected output */
+.expected-output{background:var(--code-bg);border:2px dashed var(--border);border-radius:var(--radius);padding:20px;margin:1em 0}
+.expected-output h4{color:var(--accent2);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.expected-output .mock{background:var(--surface);border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.expected-output .mock-header{background:var(--angular);color:#fff;padding:12px 16px;font-weight:700;font-size:.95rem;text-align:center}
+.expected-output .mock-nav{background:var(--card);padding:10px 16px;display:flex;gap:16px;font-size:.8rem;color:var(--accent2);border-bottom:1px solid var(--border)}
+.expected-output .mock-body{display:grid;grid-template-columns:180px 1fr;min-height:120px}
+.expected-output .mock-sidebar{background:var(--surface);padding:12px;font-size:.8rem;border-right:1px solid var(--border)}
+.expected-output .mock-content{padding:16px;font-size:.85rem}
+.expected-output .mock-footer{background:var(--surface);padding:10px 16px;font-size:.75rem;text-align:center;color:var(--code-cmt);border-top:1px solid var(--border)}
+
+@media(max-width:600px){
+  .expected-output .mock-body{grid-template-columns:1fr}
+  .question{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- =================== HEADER =================== -->
+<header class="lab-header">
+  <h1>Day 1 – Lab Assignment</h1>
+  <p class="subtitle">Angular Foundations &amp; Core Concepts</p>
+  <span class="project-name">Project: TechStore</span>
+  <p class="description">
+    In this lab, you will build a small <strong>TechStore</strong> application from scratch.
+    Every question builds on the previous one — by the end, you'll have a working store page
+    with a header, navigation, product listing, sidebar, and footer.
+  </p>
+</header>
+
+<!-- =================== Q1: Project Setup =================== -->
+<div class="question" id="q1">
+  <span class="question-number">Question 1</span>
+  <h2>Project Setup &amp; App Structure</h2>
+  <span class="tag cli">CLI</span>
+
+  <div class="goal-box">
+    <strong>Goal:</strong> Create a new Angular project called <code>tech-store</code> and generate the core components.
+  </div>
+
+  <h3>Steps</h3>
+  <ol>
+    <li>Create a new Angular project:
+      <pre><code>ng new tech-store --no-standalone</code></pre>
+    </li>
+    <li>Navigate into the project folder and generate the following <strong>4 components</strong>:
+      <ul>
+        <li><code>header</code></li>
+        <li><code>navbar</code></li>
+        <li><code>products</code></li>
+        <li><code>footer</code></li>
+      </ul>
+      <pre><code>ng g c header
+ng g c navbar
+ng g c products
+ng g c footer</code></pre>
+    </li>
+    <li>Open <code>app.component.html</code>, <strong>remove all default content</strong>, and add your components in this order:
+      <pre><code><span class="ang">&lt;app-header&gt;&lt;/app-header&gt;</span>
+<span class="ang">&lt;app-navbar&gt;&lt;/app-navbar&gt;</span>
+<span class="ang">&lt;app-products&gt;&lt;/app-products&gt;</span>
+<span class="ang">&lt;app-footer&gt;&lt;/app-footer&gt;</span></code></pre>
+    </li>
+    <li>Run <code>ng serve</code> and verify all 4 components render on the page.</li>
+  </ol>
+
+  <h3>Expected Component Tree</h3>
+  <div class="tree">
+    <span class="component">AppComponent</span> (Root)<br>
+    &nbsp;&nbsp;├── <span class="component">HeaderComponent</span><br>
+    &nbsp;&nbsp;├── <span class="component">NavbarComponent</span><br>
+    &nbsp;&nbsp;├── <span class="component">ProductsComponent</span><br>
+    &nbsp;&nbsp;└── <span class="component">FooterComponent</span>
+  </div>
+</div>
+
+<!-- =================== Q2: Models =================== -->
+<div class="question" id="q2">
+  <span class="question-number">Question 2</span>
+  <h2>Create the Store Models</h2>
+  <span class="tag model">Models</span> <span class="tag code">TypeScript</span>
+
+  <div class="goal-box">
+    <strong>Goal:</strong> Define the data models that the store will use — a <code>Product</code> interface and a <code>Category</code> enum.
+  </div>
+
+  <h3>Steps</h3>
+  <ol>
+    <li>Create a folder <code>src/app/models/</code>.</li>
+    <li>Inside it, create a file <code>product.model.ts</code> with an <strong>interface</strong> called <code>Product</code> that has:
+      <table>
+        <thead><tr><th>Property</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td><code>id</code></td><td><code>number</code></td></tr>
+          <tr><td><code>name</code></td><td><code>string</code></td></tr>
+          <tr><td><code>price</code></td><td><code>number</code></td></tr>
+          <tr><td><code>imageUrl</code></td><td><code>string</code></td></tr>
+          <tr><td><code>inStock</code></td><td><code>boolean</code></td></tr>
+        </tbody>
+      </table>
+    </li>
+    <li>In the same file (or a separate <code>category.model.ts</code>), create an <strong>enum</strong> called <code>Category</code> with values:
+      <ul>
+        <li><code>Phones</code></li>
+        <li><code>Laptops</code></li>
+        <li><code>Accessories</code></li>
+      </ul>
+      <pre><code><span class="kw">export enum</span> <span class="tp">Category</span> {
+  Phones = <span class="str">'Phones'</span>,
+  Laptops = <span class="str">'Laptops'</span>,
+  Accessories = <span class="str">'Accessories'</span>
+}</code></pre>
+    </li>
+    <li><span class="tag bonus">Bonus</span> Add a <code>category</code> property of type <code>Category</code> to the <code>Product</code> interface.</li>
+  </ol>
+
+  <div class="hint-box">
+    <strong>Hint:</strong> An <code>interface</code> defines the shape of an object. An <code>enum</code> defines a set of named constants. Both are TypeScript features — they don't exist at runtime.
+  </div>
+</div>
+
+<!-- =================== Q3: Header Component =================== -->
+<div class="question" id="q3">
+  <span class="question-number">Question 3</span>
+  <h2>Build the Header Component</h2>
+  <span class="tag html">HTML</span> <span class="tag code">TypeScript</span>
+
+  <div class="goal-box">
+    <strong>Goal:</strong> The header should display the store name, a logo image, and a welcome message — all using <strong>interpolation</strong> and <strong>property binding</strong>.
+  </div>
+
+  <h3>In <code>header.component.ts</code></h3>
+  <ol>
+    <li>Add a property <code>storeName</code> of type <code>string</code> with value <code>'TechStore'</code>.</li>
+    <li>Add a property <code>logoUrl</code> of type <code>string</code> with value <code>'logo.png'</code>.</li>
+    <li>Add a property <code>customerName</code> of type <code>string</code> with your name.</li>
+  </ol>
+
+  <h3>In <code>header.component.html</code></h3>
+  <ol>
+    <li>Display the <code>storeName</code> inside an <code>&lt;h1&gt;</code> using <strong>interpolation</strong> <code>{{ }}</code>.</li>
+    <li>Display the logo using <code>&lt;img&gt;</code> with <strong>property binding</strong> <code>[src]="logoUrl"</code>.</li>
+    <li>Display a welcome message: <code>"Welcome, {{ customerName }}!"</code></li>
+  </ol>
+
+  <div class="note-box">
+    <strong>Note:</strong> Place your images in the <code>public/</code> folder (next to <code>src/</code>). Files in <code>public/</code> are served at the root URL — so <code>public/logo.png</code> is accessed as <code>'logo.png'</code> in your code.
+  </div>
+</div>
+
+<!-- =================== Q4: Navbar Component =================== -->
+<div class="question" id="q4">
+  <span class="question-number">Question 4</span>
+  <h2>Build the Navbar Component</h2>
+  <span class="tag html">HTML</span> <span class="tag code">TypeScript</span>
+
+  <div class="goal-box">
+    <strong>Goal:</strong> Create a navigation bar that displays links from an array using <code>*ngFor</code>.
+  </div>
+
+  <h3>In <code>navbar.component.ts</code></h3>
+  <ol>
+    <li>Add a property <code>navLinks</code> — an array of objects, each with <code>label</code> (string) and <code>url</code> (string):
+      <pre><code>navLinks = [
+  { label: <span class="str">'Home'</span>, url: <span class="str">'#'</span> },
+  { label: <span class="str">'Products'</span>, url: <span class="str">'#products'</span> },
+  { label: <span class="str">'About'</span>, url: <span class="str">'#about'</span> },
+  { label: <span class="str">'Contact'</span>, url: <span class="str">'#contact'</span> }
+];</code></pre>
+    </li>
+  </ol>
+
+  <h3>In <code>navbar.component.html</code></h3>
+  <ol>
+    <li>Create a <code>&lt;nav&gt;</code> element.</li>
+    <li>Inside it, use <code>*ngFor</code> to loop over <code>navLinks</code> and render an <code>&lt;a&gt;</code> tag for each link.</li>
+    <li>Use <strong>interpolation</strong> for the link text: <code>{{ link.label }}</code></li>
+    <li>Use <strong>property binding</strong> for the href: <code>[href]="link.url"</code></li>
+  </ol>
+
+  <div class="hint-box">
+    <strong>Hint:</strong> This is your first use of <code>*ngFor</code>. The syntax is: <code>*ngFor="let link of navLinks"</code>
+  </div>
+</div>
+
+<!-- =================== Q5: Products Component =================== -->
+<div class="question" id="q5">
+  <span class="question-number">Question 5</span>
+  <h2>Build the Products Component</h2>
+  <span class="tag html">HTML</span> <span class="tag code">TypeScript</span> <span class="tag model">Models</span>
+
+  <div class="goal-box">
+    <strong>Goal:</strong> Display a list of products using the <code>Product</code> interface you created in Q2, with <code>*ngFor</code>, interpolation, and property binding.
+  </div>
+
+  <h3>In <code>products.component.ts</code></h3>
+  <ol>
+    <li><strong>Import</strong> the <code>Product</code> interface from <code>../models/product.model</code>.</li>
+    <li>Add a property <code>products</code> of type <code>Product[]</code> and initialize it with at least <strong>4 products</strong>:
+      <pre><code>products: <span class="tp">Product</span>[] = [
+  { id: <span class="num">1</span>, name: <span class="str">'iPhone 15'</span>,       price: <span class="num">999</span>,  imageUrl: <span class="str">'phone.png'</span>,  inStock: <span class="kw">true</span>  },
+  { id: <span class="num">2</span>, name: <span class="str">'MacBook Pro'</span>,     price: <span class="num">1999</span>, imageUrl: <span class="str">'laptop.png'</span>, inStock: <span class="kw">true</span>  },
+  { id: <span class="num">3</span>, name: <span class="str">'AirPods Pro'</span>,     price: <span class="num">249</span>,  imageUrl: <span class="str">'airpods.png'</span>,inStock: <span class="kw">false</span> },
+  { id: <span class="num">4</span>, name: <span class="str">'Samsung Galaxy'</span>,  price: <span class="num">899</span>,  imageUrl: <span class="str">'galaxy.png'</span>, inStock: <span class="kw">true</span>  }
+];</code></pre>
+    </li>
+    <li>Add a property <code>storeName: string = 'TechStore'</code>.</li>
+  </ol>
+
+  <h3>In <code>products.component.html</code></h3>
+  <ol>
+    <li>Add an <code>&lt;h2&gt;</code> that displays: <code>{{ storeName }} — Our Products</code></li>
+    <li>Use <code>*ngFor</code> to loop over the <code>products</code> array and render a card for each product containing:
+      <ul>
+        <li>An <code>&lt;img&gt;</code> with <code>[src]="product.imageUrl"</code></li>
+        <li>An <code>&lt;h3&gt;</code> with <code>{{ product.name }}</code></li>
+        <li>A <code>&lt;p&gt;</code> showing the price: <code>Price: ${{ product.price }}</code></li>
+        <li>A <code>&lt;span&gt;</code> showing stock status using a <strong>ternary expression</strong>:
+          <pre><code>{{ product.inStock ? <span class="str">'In Stock ✅'</span> : <span class="str">'Out of Stock ❌'</span> }}</code></pre>
+        </li>
+      </ul>
+    </li>
+    <li>Use <strong>property binding</strong> to conditionally disable a "Buy" button when the product is out of stock:
+      <pre><code>&lt;button [disabled]="!product.inStock"&gt;Buy Now&lt;/button&gt;</code></pre>
+    </li>
+  </ol>
+
+  <div class="note-box">
+    <strong>Note:</strong> Place product images in the <code>public/</code> folder (e.g., <code>public/phone.png</code>). They are accessed directly as <code>'phone.png'</code> in your code — no path prefix needed.
+  </div>
+</div>
+
+<!-- =================== Q6: Sidebar Component =================== -->
+<div class="question" id="q6">
+  <span class="question-number">Question 6</span>
+  <h2>Add a Sidebar Component</h2>
+  <span class="tag cli">CLI</span> <span class="tag html">HTML</span> <span class="tag code">TypeScript</span>
+
+  <div class="goal-box">
+    <strong>Goal:</strong> Add a sidebar that displays product categories using the <code>Category</code> enum, and update the page layout to show the sidebar next to the products.
+  </div>
+
+  <h3>Steps</h3>
+  <ol>
+    <li>Generate a new component:
+      <pre><code>ng g c sidebar</code></pre>
+    </li>
+    <li>In <code>sidebar.component.ts</code>:
+      <ul>
+        <li>Import the <code>Category</code> enum from your models.</li>
+        <li>Create a property <code>categories</code> that holds all enum values:
+          <pre><code>categories = [<span class="tp">Category</span>.Phones, <span class="tp">Category</span>.Laptops, <span class="tp">Category</span>.Accessories];</code></pre>
+        </li>
+      </ul>
+    </li>
+    <li>In <code>sidebar.component.html</code>:
+      <ul>
+        <li>Add a heading: <code>&lt;h3&gt;Categories&lt;/h3&gt;</code></li>
+        <li>Use <code>*ngFor</code> to render each category as a list item.</li>
+      </ul>
+    </li>
+    <li>Update <code>app.component.html</code> to place the sidebar <strong>next to</strong> the products section:
+      <pre><code><span class="ang">&lt;app-header&gt;&lt;/app-header&gt;</span>
+<span class="ang">&lt;app-navbar&gt;&lt;/app-navbar&gt;</span>
+
+&lt;div class="main-content"&gt;
+  <span class="ang">&lt;app-sidebar&gt;&lt;/app-sidebar&gt;</span>
+  <span class="ang">&lt;app-products&gt;&lt;/app-products&gt;</span>
+&lt;/div&gt;
+
+<span class="ang">&lt;app-footer&gt;&lt;/app-footer&gt;</span></code></pre>
+    </li>
+    <li>In <code>app.component.css</code>, add a simple layout:
+      <pre><code><span class="fn">.main-content</span> {
+  <span class="kw">display</span>: flex;
+}
+<span class="fn">app-sidebar</span> {
+  <span class="kw">width</span>: <span class="num">200px</span>;
+}
+<span class="fn">app-products</span> {
+  <span class="kw">flex</span>: <span class="num">1</span>;
+}</code></pre>
+    </li>
+  </ol>
+
+  <h3>Expected Page Layout</h3>
+  <div class="layout-diagram">
+    <div class="row"><div class="cell full header-cell">Header (Store Name + Logo)</div></div>
+    <div class="row"><div class="cell full nav-cell">Navbar (Home | Products | About | Contact)</div></div>
+    <div class="row" style="grid-template-columns:180px 1fr">
+      <div class="cell sidebar-cell">Sidebar<br><small>Categories</small></div>
+      <div class="cell content-cell">Products<br><small>Product cards with *ngFor</small></div>
+    </div>
+    <div class="row"><div class="cell full footer-cell">Footer</div></div>
+  </div>
+</div>
+
+<!-- =================== Q7: Footer Component =================== -->
+<div class="question" id="q7">
+  <span class="question-number">Question 7</span>
+  <h2>Build the Footer Component</h2>
+  <span class="tag html">HTML</span> <span class="tag code">TypeScript</span>
+
+  <div class="goal-box">
+    <strong>Goal:</strong> Create a footer that displays the store name and current year using interpolation and expressions.
+  </div>
+
+  <h3>In <code>footer.component.ts</code></h3>
+  <ol>
+    <li>Add a property <code>storeName: string = 'TechStore'</code>.</li>
+    <li>Add a property <code>currentYear</code> that holds the current year:
+      <pre><code>currentYear = <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">getFullYear</span>();</code></pre>
+    </li>
+  </ol>
+
+  <h3>In <code>footer.component.html</code></h3>
+  <ol>
+    <li>Display: <code>&copy; {{ currentYear }} {{ storeName }}. All rights reserved.</code></li>
+  </ol>
+</div>
+
+<!-- =================== Q8: Styling (Bonus) =================== -->
+<div class="question" id="q8">
+  <span class="question-number">Bonus</span>
+  <h2>Add Bootstrap &amp; Style the App</h2>
+  <span class="tag bonus">Bonus</span> <span class="tag cli">CLI</span>
+
+  <div class="goal-box">
+    <strong>Goal:</strong> Install Bootstrap and apply styling to make the store look polished.
+  </div>
+
+  <h3>Steps</h3>
+  <ol>
+    <li>Install Bootstrap:
+      <pre><code>npm install bootstrap</code></pre>
+    </li>
+    <li>Add Bootstrap CSS to <code>angular.json</code> under <code>styles</code>:
+      <pre><code><span class="str">"styles"</span>: [
+  <span class="str">"node_modules/bootstrap/dist/css/bootstrap.min.css"</span>,
+  <span class="str">"src/styles.css"</span>
+]</code></pre>
+    </li>
+    <li>Apply Bootstrap classes to your components:
+      <ul>
+        <li><strong>Navbar:</strong> Use <code>navbar</code>, <code>navbar-expand-lg</code>, <code>navbar-dark</code>, <code>bg-dark</code> classes.</li>
+        <li><strong>Products:</strong> Use <code>card</code> classes for product cards, laid out in a <code>row</code> with <code>col-md-4</code>.</li>
+        <li><strong>Footer:</strong> Use <code>bg-dark text-white text-center p-3</code>.</li>
+      </ul>
+    </li>
+    <li>Use <strong>property binding</strong> for dynamic styling on product cards:
+      <pre><code><span class="cmt">&lt;!-- Grey out out-of-stock products --&gt;</span>
+&lt;div [class.opacity-50]="!product.inStock"&gt;...&lt;/div&gt;</code></pre>
+    </li>
+  </ol>
+</div>
+
+<!-- =================== FINAL EXPECTED OUTPUT =================== -->
+<div class="section-divider">
+  <div class="line"></div>
+  <span>Final Result</span>
+</div>
+
+<div class="question" style="border-color:var(--green)">
+  <h2 style="color:var(--green)">Expected Final Output</h2>
+  <p>When all questions are completed, your app should look like this:</p>
+
+  <div class="expected-output">
+    <h4>TechStore — Browser Preview</h4>
+    <div class="mock">
+      <div class="mock-header">TechStore &nbsp;|&nbsp; Welcome, Mahmoud!</div>
+      <div class="mock-nav">
+        <span>Home</span>
+        <span>Products</span>
+        <span>About</span>
+        <span>Contact</span>
+      </div>
+      <div class="mock-body">
+        <div class="mock-sidebar">
+          <strong style="color:var(--accent2)">Categories</strong><br><br>
+          &bull; Phones<br>
+          &bull; Laptops<br>
+          &bull; Accessories
+        </div>
+        <div class="mock-content">
+          <strong>TechStore — Our Products</strong><br><br>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.78rem">
+            <div style="background:var(--surface);padding:10px;border-radius:6px">
+              <strong>iPhone 15</strong><br>$999<br><span style="color:var(--green)">In Stock</span><br>
+              <span style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:4px;font-size:.7rem">Buy Now</span>
+            </div>
+            <div style="background:var(--surface);padding:10px;border-radius:6px">
+              <strong>MacBook Pro</strong><br>$1999<br><span style="color:var(--green)">In Stock</span><br>
+              <span style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:4px;font-size:.7rem">Buy Now</span>
+            </div>
+            <div style="background:var(--surface);padding:10px;border-radius:6px;opacity:.5">
+              <strong>AirPods Pro</strong><br>$249<br><span style="color:var(--red)">Out of Stock</span><br>
+              <span style="background:var(--border);color:var(--code-cmt);padding:2px 8px;border-radius:4px;font-size:.7rem">Buy Now</span>
+            </div>
+            <div style="background:var(--surface);padding:10px;border-radius:6px">
+              <strong>Samsung Galaxy</strong><br>$899<br><span style="color:var(--green)">In Stock</span><br>
+              <span style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:4px;font-size:.7rem">Buy Now</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-footer">&copy; 2026 TechStore. All rights reserved.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== CHECKLIST =================== -->
+<div class="question" style="border-color:var(--accent3)">
+  <h2 style="color:var(--accent3)">Checklist — What You Practiced</h2>
+  <table>
+    <thead><tr><th>Concept</th><th>Where You Used It</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Angular CLI</strong></td><td>Creating the project &amp; generating components (Q1, Q6)</td></tr>
+      <tr><td><strong>Components</strong></td><td>Header, Navbar, Products, Sidebar, Footer (Q1–Q7)</td></tr>
+      <tr><td><strong>Decorators</strong></td><td><code>@Component()</code> in every component</td></tr>
+      <tr><td><strong>Interfaces</strong></td><td><code>Product</code> interface (Q2)</td></tr>
+      <tr><td><strong>Enums</strong></td><td><code>Category</code> enum (Q2, Q6)</td></tr>
+      <tr><td><strong>Interpolation <code>{{ }}</code></strong></td><td>Store name, product names, prices, welcome message (Q3–Q7)</td></tr>
+      <tr><td><strong>Property Binding <code>[ ]</code></strong></td><td>Image src, href, disabled button, class binding (Q3–Q8)</td></tr>
+      <tr><td><strong>*ngFor</strong></td><td>Nav links, product list, categories (Q4–Q6)</td></tr>
+      <tr><td><strong>Expressions</strong></td><td>Ternary for stock status, <code>getFullYear()</code> (Q5, Q7)</td></tr>
+      <tr><td><strong>External Templates</strong></td><td>Every component uses <code>templateUrl</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div><!-- end container -->
+</body>
+</html>

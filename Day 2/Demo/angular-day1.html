@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Angular Course – Day 1</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0f111a;--surface:#1a1d2e;--card:#222640;--border:#2e3350;
+--text:#c9cedc;--heading:#e2e8f0;--accent:#7c3aed;--accent2:#06b6d4;
+--accent3:#f59e0b;--green:#22c55e;--red:#ef4444;--pink:#ec4899;
+--code-bg:#151829;--code-str:#a5d6ff;--code-kw:#c678dd;--code-fn:#61afef;
+--code-num:#d19a66;--code-cmt:#5c6370;--code-type:#e5c07b;
+--angular:#dd0031;--radius:12px;
+--font:'Segoe UI',system-ui,-apple-system,sans-serif;
+--mono:'Cascadia Code','Fira Code','Consolas',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+.slide{min-height:100vh;width:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 40px;position:relative;border-bottom:1px solid var(--border)}
+.slide-inner{max-width:1100px;width:100%}
+.slide-number{position:absolute;top:20px;right:30px;background:var(--surface);border:1px solid var(--border);padding:4px 14px;border-radius:20px;font-size:.8rem;color:var(--accent2);font-family:var(--mono)}
+.day-badge{position:absolute;top:20px;left:30px;background:var(--angular);color:#fff;padding:4px 14px;border-radius:20px;font-size:.8rem;font-weight:700;font-family:var(--mono)}
+h1{font-size:clamp(2rem,5vw,3.2rem);color:var(--heading);margin-bottom:.4em;font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.5vw,2.2rem);color:var(--heading);margin-bottom:.3em;font-weight:700;display:flex;align-items:center;gap:12px}
+h3{color:var(--accent2);margin-bottom:.4em;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:.85rem}
+p{margin-bottom:.6em;max-width:800px}
+.subtitle{font-size:clamp(1rem,2vw,1.35rem);color:var(--accent2);margin-bottom:1.2em}
+.tag{display:inline-block;background:var(--accent);color:#fff;padding:3px 12px;border-radius:20px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-right:6px;margin-bottom:6px}
+.tag.angular{background:var(--angular)}.tag.tip{background:var(--green);color:#000}.tag.warn{background:var(--accent3);color:#000}.tag.day{background:var(--accent2);color:#000}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:1em}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:1em}
+@media(max-width:900px){.two-col,.three-col{grid-template-columns:1fr}.slide{padding:40px 20px}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.card.highlight{border-left:4px solid var(--accent)}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px;overflow-x:auto;margin:.8em 0;font-size:.88rem;line-height:1.7}
+code{font-family:var(--mono);font-size:.88rem}
+pre code{color:var(--text)}
+p code,li code,td code{background:var(--card);padding:2px 7px;border-radius:5px;font-size:.85em;color:var(--accent2)}
+.kw{color:var(--code-kw)}.fn{color:var(--code-fn)}.str{color:var(--code-str)}.num{color:var(--code-num)}.cmt{color:var(--code-cmt);font-style:italic}.tp{color:var(--code-type)}.dec{color:var(--accent3)}.ang{color:var(--angular)}
+ul,ol{padding-left:1.4em;margin-bottom:.8em}
+li{margin-bottom:.35em}
+.def-box{background:linear-gradient(135deg,var(--surface),var(--card));border-left:4px solid var(--accent2);padding:18px 24px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:1em;font-size:1.05rem}
+.why-box{background:linear-gradient(135deg,#1a1525,var(--surface));border-left:4px solid var(--accent);padding:14px 20px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:1em}
+.why-box strong{color:var(--accent)}
+.tip-box{background:linear-gradient(135deg,#0f1f1a,var(--surface));border-left:4px solid var(--green);padding:14px 20px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:1em}
+table{width:100%;border-collapse:collapse;margin:.8em 0;font-size:.9rem}
+th,td{padding:10px 16px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--accent2);font-weight:600;background:var(--surface)}
+tr:hover td{background:var(--surface)}
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(26,29,46,.92);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:10px 24px;z-index:1000;backdrop-filter:blur(12px)}
+.nav-bar button{background:var(--accent);color:#fff;border:none;padding:8px 24px;border-radius:8px;cursor:pointer;font-family:var(--font);font-size:.9rem;font-weight:600;transition:background .2s,transform .1s}
+.nav-bar button:hover{background:#6d28d9}.nav-bar button:active{transform:scale(.97)}.nav-bar button:disabled{opacity:.3;cursor:default;transform:none}
+.nav-bar .progress-text{font-family:var(--mono);font-size:.8rem;color:var(--accent2)}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--angular));z-index:1001;transition:width .3s}
+.title-slide{text-align:center;background:radial-gradient(ellipse at center,#1a1d3a 0%,var(--bg) 70%)}
+.title-slide h1{font-size:clamp(2.5rem,6vw,4rem);background:linear-gradient(135deg,var(--angular),var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.2em}
+.divider{width:80px;height:3px;background:linear-gradient(90deg,var(--angular),var(--accent2));border-radius:2px;margin:1em 0}
+.center{text-align:center}
+.flex-wrap{display:flex;flex-wrap:wrap;gap:12px;margin:.8em 0}
+.timeline{position:relative;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:16px;padding:12px 18px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border)}
+.timeline-item::before{content:'';position:absolute;left:-26px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.timeline-item.done::before{background:var(--green)}
+.timeline-item.current::before{background:var(--accent3);box-shadow:0 0 8px var(--accent3)}
+.day-divider{min-height:30vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e0a0a,var(--bg));border-bottom:2px solid var(--angular)}
+.day-divider h1{color:var(--angular);text-align:center}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- SLIDE 0 – TITLE -->
+<section class="slide title-slide" id="slide-0">
+<div class="slide-inner center">
+<span style="font-size:4rem;display:block;margin-bottom:.3em">🅰️</span>
+<h1>Angular Course – Day 1</h1>
+<p class="subtitle">Foundations &amp; Core Concepts</p>
+<div class="divider" style="margin:.5em auto"></div>
+<p style="max-width:600px;margin:.8em auto;font-size:1.05rem">
+Components, Templates, Decorators, Data Binding, and Structural Directives.
+</p>
+<div class="flex-wrap" style="justify-content:center;margin-top:1.5em">
+<span class="tag angular">Angular</span>
+<span class="tag day">Day 1</span>
+<span class="tag tip">Beginner Friendly</span>
+</div>
+<p style="margin-top:2em;font-size:.85rem;color:var(--code-cmt)">Use <code>←</code> <code>→</code> arrow keys or buttons below to navigate</p>
+</div>
+<span class="slide-number">0 / 11</span>
+</section>
+
+<!-- SLIDE 1 – COURSE OVERVIEW (Day 1 Index) -->
+<section class="slide" id="slide-1">
+<div class="slide-inner">
+<h2>📋 Day 1 – Course Overview</h2>
+<div class="divider"></div>
+<div class="two-col">
+<div>
+<h3>Topics Covered</h3>
+<div class="timeline">
+<div class="timeline-item current">What is Angular?</div>
+<div class="timeline-item">Project Structure</div>
+<div class="timeline-item">Angular Versions (v1 vs v2+)</div>
+<div class="timeline-item">Decorators</div>
+<div class="timeline-item">Creating Components</div>
+<div class="timeline-item">Templates – Internal vs External</div>
+</div>
+</div>
+<div>
+<h3>Data Binding &amp; Directives</h3>
+<div class="timeline">
+<div class="timeline-item">Interpolation</div>
+<div class="timeline-item">Property Binding</div>
+<div class="timeline-item">*ngFor</div>
+</div>
+<div class="tip-box" style="margin-top:1em">
+<strong style="color:var(--green)">Goal:</strong> By the end of Day 1, you'll understand Angular's core building blocks and be able to create components, display dynamic data, and render lists.
+</div>
+</div>
+</div>
+</div>
+<span class="slide-number">1 / 11</span>
+</section>
+
+<!-- SLIDE 2 – DAY 1 DIVIDER -->
+<section class="slide day-divider" id="slide-2">
+<div class="slide-inner center">
+<h1>📅 Day 1</h1>
+<p class="subtitle" style="text-align:center">Foundations &amp; Core Concepts</p>
+</div>
+<span class="slide-number">2 / 11</span>
+</section>
+
+<!-- SLIDE 3 – WHAT IS ANGULAR -->
+<section class="slide" id="slide-3">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>🅰️ What is Angular?</h2>
+<div class="divider"></div>
+<div class="def-box">
+Angular is a <strong>TypeScript-based front-end framework</strong> built by Google for creating <strong>Single Page Applications (SPAs)</strong>. It provides everything out-of-the-box: routing, forms, HTTP, testing, and more.
+</div>
+<div class="two-col">
+<div>
+<h3>Key Features</h3>
+<ul>
+<li><strong>Component-based</strong> architecture</li>
+<li><strong>TypeScript</strong> by default</li>
+<li><strong>Two-way data binding</strong></li>
+<li><strong>Dependency Injection</strong> built-in</li>
+<li><strong>Angular CLI</strong> for scaffolding</li>
+<li><strong>RxJS</strong> for reactive programming</li>
+</ul>
+</div>
+<div>
+<h3>Getting Started</h3>
+<pre><code><span class="cmt"># Install Angular CLI</span>
+npm install -g @angular/cli
+
+<span class="cmt"># Create new project</span>
+ng new my-app
+
+<span class="cmt"># Run development server</span>
+<span class="kw">cd</span> my-app
+ng serve
+
+<span class="cmt"># Open http://localhost:4200</span></code></pre>
+</div>
+</div>
+<div class="tip-box">
+<strong style="color:var(--green)">Project Structure:</strong> <code>src/app/</code> contains your components, services, and modules. <code>angular.json</code> configures the build. <code>tsconfig.json</code> configures TypeScript.
+</div>
+</div>
+<span class="slide-number">3 / 11</span>
+</section>
+
+<!-- SLIDE 4 – PROJECT STRUCTURE -->
+<section class="slide" id="slide-4">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>📁 Angular Project Structure</h2>
+<div class="divider"></div>
+<div class="def-box">
+After running <code>ng new my-app</code>, Angular generates a complete project folder. Understanding where things live is essential before writing any code.
+</div>
+<div class="two-col">
+<div>
+<h3>Folder Structure</h3>
+<pre><code>my-app/
+├── <span class="dec">public/</span>              <span class="cmt"># Static files (images, icons)</span>
+│   └── favicon.ico
+├── <span class="dec">src/</span>
+│   ├── <span class="dec">app/</span>             <span class="cmt"># Your components &amp; logic</span>
+│   │   ├── app.component.ts
+│   │   ├── app.component.html
+│   │   ├── app.component.css
+│   │   └── app.module.ts
+│   ├── index.html         <span class="cmt"># Main HTML page</span>
+│   ├── main.ts            <span class="cmt"># App entry point</span>
+│   └── styles.css         <span class="cmt"># Global styles</span>
+├── <span class="dec">angular.json</span>         <span class="cmt"># Build &amp; project config</span>
+├── package.json         <span class="cmt"># Dependencies</span>
+└── tsconfig.json        <span class="cmt"># TypeScript config</span></code></pre>
+</div>
+<div>
+<h3>Key Files &amp; Folders</h3>
+<table>
+<thead><tr><th>Path</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>src/app/</code></td><td>All your components, services, models live here</td></tr>
+<tr><td><code>public/</code></td><td>Static files served at root URL (images, fonts, etc.)</td></tr>
+<tr><td><code>angular.json</code></td><td>Project config — styles, scripts, build options</td></tr>
+<tr><td><code>app.module.ts</code></td><td>Root module — registers all components</td></tr>
+<tr><td><code>app.component.*</code></td><td>Root component — the starting point of your app</td></tr>
+<tr><td><code>styles.css</code></td><td>Global CSS — applies to the entire app</td></tr>
+</tbody>
+</table>
+<div class="tip-box" style="margin-top:1em">
+<strong style="color:var(--green)">public/ folder:</strong> Any file you place in <code>public/</code> is served at the root URL. So <code>public/logo.png</code> is accessed in your code as just <code>'logo.png'</code> — no path prefix needed.
+</div>
+</div>
+</div>
+<div class="why-box">
+<strong>Why does this matter?</strong> When you generate components with the CLI, they go inside <code>src/app/</code>. When you add images, they go in <code>public/</code>. When you add Bootstrap, you configure it in <code>angular.json</code>. Knowing the structure saves you from guessing where things belong.
+</div>
+</div>
+<span class="slide-number">4 / 11</span>
+</section>
+
+<!-- SLIDE 5 – ANGULAR VERSIONS (v1 vs v2+) -->
+<section class="slide" id="slide-5">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>📊 Angular Versions – v1 vs v2+</h2>
+<div class="divider"></div>
+<div class="def-box">
+<strong>AngularJS (v1)</strong> and <strong>Angular (v2+)</strong> are two completely different frameworks. Angular 2+ was a full rewrite — not an upgrade.
+</div>
+<table>
+<thead><tr><th>Feature</th><th>AngularJS (v1)</th><th>Angular (v2+)</th></tr></thead>
+<tbody>
+<tr><td><strong>Language</strong></td><td>JavaScript</td><td>TypeScript</td></tr>
+<tr><td><strong>Architecture</strong></td><td>MVC (Model-View-Controller)</td><td>Component-based</td></tr>
+<tr><td><strong>Data Binding</strong></td><td>Two-way (scope-based)</td><td>One-way by default, two-way opt-in</td></tr>
+<tr><td><strong>Mobile Support</strong></td><td>Not built for mobile</td><td>Mobile-first design</td></tr>
+<tr><td><strong>CLI</strong></td><td>No official CLI</td><td>Powerful Angular CLI</td></tr>
+<tr><td><strong>Performance</strong></td><td>Slower (digest cycle)</td><td>Faster (change detection, AOT)</td></tr>
+<tr><td><strong>Dependency Injection</strong></td><td>Basic DI by name</td><td>Hierarchical DI by type</td></tr>
+<tr><td><strong>Rendering</strong></td><td>DOM-based</td><td>Uses Renderer (platform-independent)</td></tr>
+</tbody>
+</table>
+<div class="two-col">
+<div class="why-box">
+<strong>Why the rewrite?</strong> AngularJS had performance issues with large apps, lacked mobile support, and its architecture didn't scale well. Angular 2+ was redesigned from scratch with modern web standards.
+</div>
+<div>
+<h3>Version Timeline</h3>
+<ul>
+<li><strong>AngularJS (2010)</strong> – The original, JavaScript-based</li>
+<li><strong>Angular 2 (2016)</strong> – Complete rewrite in TypeScript</li>
+<li><strong>Angular 4-17+ (2017–now)</strong> – Incremental improvements, same core</li>
+</ul>
+<div class="tip-box">
+<strong style="color:var(--green)">Note:</strong> When people say "Angular" today, they mean <strong>v2+</strong>. "AngularJS" specifically refers to v1. AngularJS reached <strong>end of life</strong> in December 2021.
+</div>
+</div>
+</div>
+</div>
+<span class="slide-number">5 / 11</span>
+</section>
+
+<!-- SLIDE 6 – DECORATORS -->
+<section class="slide" id="slide-6">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>🎀 Decorators</h2>
+<div class="divider"></div>
+<div class="def-box">
+A <strong>Decorator</strong> is a special function that <strong>attaches metadata</strong> to a class, method, or property. Angular uses decorators to tell the framework how to process and configure classes. They start with <code>@</code>.
+</div>
+<div class="why-box">
+<strong>Why?</strong> Without decorators, Angular wouldn't know that your class is a component, a service, a module, or a directive. Decorators are how you tell Angular <em>what</em> a class is and <em>how</em> it should behave.
+</div>
+<div class="two-col">
+<div>
+<h3>Common Angular Decorators</h3>
+<table>
+<thead><tr><th>Decorator</th><th>Used For</th></tr></thead>
+<tbody>
+<tr><td><code>@Component()</code></td><td>Marks a class as a component</td></tr>
+<tr><td><code>@NgModule()</code></td><td>Marks a class as a module</td></tr>
+<tr><td><code>@Injectable()</code></td><td>Marks a class as a service (for DI)</td></tr>
+<tr><td><code>@Directive()</code></td><td>Marks a class as a directive</td></tr>
+<tr><td><code>@Pipe()</code></td><td>Marks a class as a pipe</td></tr>
+<tr><td><code>@Input()</code></td><td>Receives data from parent component</td></tr>
+<tr><td><code>@Output()</code></td><td>Sends data to parent component</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<h3>@Component Example</h3>
+<pre><code><span class="kw">import</span> { <span class="tp">Component</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dec">@Component</span>({
+  selector:    <span class="str">'app-header'</span>,
+  templateUrl: <span class="str">'./header.component.html'</span>,
+  styleUrls:   [<span class="str">'./header.component.css'</span>]
+})
+<span class="kw">export class</span> <span class="tp">HeaderComponent</span> {
+  title = <span class="str">'My App'</span>;
+}</code></pre>
+<h3>@Injectable Example</h3>
+<pre><code><span class="kw">import</span> { <span class="tp">Injectable</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dec">@Injectable</span>({
+  providedIn: <span class="str">'root'</span>
+})
+<span class="kw">export class</span> <span class="tp">DataService</span> {
+  <span class="fn">getData</span>() { <span class="kw">return</span> [<span class="str">'A'</span>, <span class="str">'B'</span>]; }
+}</code></pre>
+</div>
+</div>
+<div class="tip-box">
+<strong style="color:var(--green)">Key Point:</strong> Decorators are <strong>TypeScript features</strong> that Angular leverages heavily. The <code>@</code> symbol followed by a function call is the decorator syntax. The object you pass inside is the <strong>metadata</strong>.
+</div>
+</div>
+<span class="slide-number">6 / 11</span>
+</section>
+
+<!-- SLIDE 7 – CREATING COMPONENTS -->
+<section class="slide" id="slide-7">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>🛠️ Creating Components</h2>
+<div class="divider"></div>
+<div class="def-box">
+The Angular CLI generates components automatically with the correct structure, files, and module registration. You rarely create component files manually.
+</div>
+<div class="why-box">
+<strong>Why CLI?</strong> It creates 4 files (<code>.ts</code>, <code>.html</code>, <code>.css</code>, <code>.spec.ts</code>), registers the component in the module, and follows Angular naming conventions — saving time and preventing mistakes.
+</div>
+<div class="two-col">
+<div>
+<h3>CLI Commands</h3>
+<pre><code><span class="cmt"># Full command</span>
+ng generate component header
+
+<span class="cmt"># Shorthand</span>
+ng g c header
+
+<span class="cmt"># Creates:</span>
+<span class="cmt"># src/app/header/</span>
+<span class="cmt">#   ├── header.component.ts</span>
+<span class="cmt">#   ├── header.component.html</span>
+<span class="cmt">#   ├── header.component.css</span>
+<span class="cmt">#   └── header.component.spec.ts</span>
+
+<span class="cmt"># Useful flags</span>
+ng g c header --inline-style     <span class="cmt"># no CSS file</span>
+ng g c header --inline-template  <span class="cmt"># no HTML file</span>
+ng g c header --skip-tests       <span class="cmt"># no spec file</span>
+ng g c shared/card               <span class="cmt"># in subfolder</span></code></pre>
+</div>
+<div>
+<h3>Generated Code</h3>
+<pre><code><span class="cmt">// header.component.ts</span>
+<span class="kw">import</span> { <span class="tp">Component</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dec">@Component</span>({
+  selector: <span class="str">'app-header'</span>,
+  templateUrl: <span class="str">'./header.component.html'</span>,
+  styleUrls: [<span class="str">'./header.component.css'</span>]
+})
+<span class="kw">export class</span> <span class="tp">HeaderComponent</span> {
+
+}</code></pre>
+<pre><code><span class="cmt">&lt;!-- Using it in another template --&gt;</span>
+<span class="ang">&lt;app-header&gt;&lt;/app-header&gt;</span></code></pre>
+<div class="card" style="margin-top:1em">
+<h4 style="color:var(--accent2)">Component = 3 Parts</h4>
+<ul style="font-size:.9rem">
+<li><strong>TypeScript Class</strong> (<code>.ts</code>) – Logic &amp; data</li>
+<li><strong>HTML Template</strong> (<code>.html</code>) – The view</li>
+<li><strong>CSS Styles</strong> (<code>.css</code>) – Appearance</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<span class="slide-number">7 / 11</span>
+</section>
+
+<!-- SLIDE 8 – TEMPLATES: INTERNAL vs EXTERNAL -->
+<section class="slide" id="slide-8">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>📄 Templates – Internal vs External</h2>
+<div class="divider"></div>
+<div class="def-box">
+A <strong>template</strong> is the HTML view of a component. Angular supports two ways to define templates: <strong>external</strong> (separate file) or <strong>inline</strong> (inside the component class).
+</div>
+<div class="two-col">
+<div>
+<h3>External Template (Recommended)</h3>
+<pre><code><span class="dec">@Component</span>({
+  selector: <span class="str">'app-user'</span>,
+  templateUrl: <span class="str">'./user.component.html'</span>,
+  styleUrls: [<span class="str">'./user.component.css'</span>]
+})
+<span class="kw">export class</span> <span class="tp">UserComponent</span> {
+  name = <span class="str">'Mahmoud'</span>;
+}</code></pre>
+<pre><code><span class="cmt">&lt;!-- user.component.html --&gt;</span>
+&lt;div class="user-card"&gt;
+  &lt;h2&gt;{{ name }}&lt;/h2&gt;
+  &lt;button (click)="<span class="fn">edit</span>()"&gt;Edit&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+<p style="font-size:.85rem"><span class="tag tip">Tip</span> Use external templates for any component with more than 3-4 lines of HTML.</p>
+</div>
+<div>
+<h3>Inline Template</h3>
+<pre><code><span class="dec">@Component</span>({
+  selector: <span class="str">'app-badge'</span>,
+  template: <span class="str">`
+    &lt;span class="badge"&gt;
+      {{ label }}
+    &lt;/span&gt;
+  `</span>,
+  styles: [<span class="str">`
+    .badge {
+      background: #dd0031;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+  `</span>]
+})
+<span class="kw">export class</span> <span class="tp">BadgeComponent</span> {
+  label = <span class="str">'New'</span>;
+}</code></pre>
+<p style="font-size:.85rem"><span class="tag warn">Note</span> Use <code>template</code> + backticks for small, simple components.</p>
+</div>
+</div>
+<div class="card highlight">
+<p><strong>Key Difference:</strong> <code>templateUrl</code> points to an external file. <code>template</code> contains inline HTML directly. Same applies to <code>styleUrls</code> vs <code>styles</code>.</p>
+</div>
+</div>
+<span class="slide-number">8 / 11</span>
+</section>
+
+<!-- SLIDE 9 – INTERPOLATION -->
+<section class="slide" id="slide-9">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>🔤 Interpolation <code>{{ }}</code></h2>
+<div class="divider"></div>
+<div class="def-box">
+<strong>Interpolation</strong> is the simplest form of data binding. It lets you embed <strong>component properties and expressions</strong> into your HTML template using double curly braces <code>{{ }}</code>.
+</div>
+<div class="why-box">
+<strong>Why?</strong> Interpolation is how you display dynamic data from your component class in the view. Whenever the data changes, Angular automatically updates the DOM.
+</div>
+<div class="two-col">
+<div>
+<h3>Template</h3>
+<pre><code><span class="cmt">&lt;!-- Display a property --&gt;</span>
+&lt;h1&gt;{{ title }}&lt;/h1&gt;
+
+<span class="cmt">&lt;!-- Display with text --&gt;</span>
+&lt;p&gt;Welcome, {{ username }}!&lt;/p&gt;
+
+<span class="cmt">&lt;!-- Expressions --&gt;</span>
+&lt;p&gt;Total: {{ price * quantity }}&lt;/p&gt;
+
+<span class="cmt">&lt;!-- Method calls --&gt;</span>
+&lt;p&gt;{{ getName().toUpperCase() }}&lt;/p&gt;
+
+<span class="cmt">&lt;!-- Ternary operator --&gt;</span>
+&lt;p&gt;{{ isActive ? 'Active' : 'Inactive' }}&lt;/p&gt;
+
+<span class="cmt">&lt;!-- String concatenation --&gt;</span>
+&lt;p&gt;{{ 'Hello, ' + username }}&lt;/p&gt;</code></pre>
+</div>
+<div>
+<h3>Component Class</h3>
+<pre><code><span class="dec">@Component</span>({
+  selector: <span class="str">'app-home'</span>,
+  templateUrl: <span class="str">'./home.component.html'</span>
+})
+<span class="kw">export class</span> <span class="tp">HomeComponent</span> {
+  title = <span class="str">'My App'</span>;
+  username = <span class="str">'Mahmoud'</span>;
+  price = <span class="num">50</span>;
+  quantity = <span class="num">3</span>;
+  isActive = <span class="kw">true</span>;
+
+  <span class="fn">getName</span>(): <span class="tp">string</span> {
+    <span class="kw">return</span> <span class="kw">this</span>.username;
+  }
+}</code></pre>
+<div class="tip-box" style="margin-top:1em">
+<strong style="color:var(--green)">Rules:</strong>
+<ul>
+<li>You <strong>can</strong> use expressions, method calls, ternary operators</li>
+<li>You <strong>cannot</strong> use assignments (<code>=</code>), <code>new</code>, chained expressions (<code>;</code>), or increment/decrement (<code>++</code>/<code>--</code>)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<span class="slide-number">9 / 11</span>
+</section>
+
+<!-- SLIDE 10 – PROPERTY BINDING -->
+<section class="slide" id="slide-10">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>🔗 Property Binding <code>[ ]</code></h2>
+<div class="divider"></div>
+<div class="def-box">
+<strong>Property binding</strong> lets you set an HTML element's <strong>DOM property</strong> to a component property value using square brackets <code>[ ]</code>. It flows data <strong>one-way: Component → View</strong>.
+</div>
+<div class="why-box">
+<strong>Why not interpolation?</strong> Interpolation only works for text content. For <strong>non-string properties</strong> like <code>disabled</code>, <code>hidden</code>, <code>src</code>, or <code>colspan</code> — you need property binding.
+</div>
+<div class="two-col">
+<div>
+<h3>Property Binding Examples</h3>
+<pre><code><span class="cmt">&lt;!-- Bind to DOM properties --&gt;</span>
+&lt;img [src]="imageUrl"&gt;
+&lt;button [disabled]="!isValid"&gt;Submit&lt;/button&gt;
+&lt;p [textContent]="message"&gt;&lt;/p&gt;
+&lt;div [innerHTML]="htmlContent"&gt;&lt;/div&gt;
+
+<span class="cmt">&lt;!-- Attribute Binding --&gt;</span>
+&lt;td [attr.colspan]="colSpan"&gt;&lt;/td&gt;
+&lt;div [attr.aria-label]="label"&gt;&lt;/div&gt;
+
+<span class="cmt">&lt;!-- Class Binding --&gt;</span>
+&lt;div [class.active]="isActive"&gt;&lt;/div&gt;
+&lt;div [class.text-danger]="hasError"&gt;&lt;/div&gt;
+
+<span class="cmt">&lt;!-- Style Binding --&gt;</span>
+&lt;div [style.color]="textColor"&gt;&lt;/div&gt;
+&lt;div [style.font-size.px]="fontSize"&gt;&lt;/div&gt;</code></pre>
+</div>
+<div>
+<h3>Component Class</h3>
+<pre><code><span class="kw">export class</span> <span class="tp">DemoComponent</span> {
+  imageUrl = <span class="str">'assets/logo.png'</span>;
+  isValid = <span class="kw">false</span>;
+  message = <span class="str">'Hello World'</span>;
+  colSpan = <span class="num">2</span>;
+  isActive = <span class="kw">true</span>;
+  hasError = <span class="kw">false</span>;
+  textColor = <span class="str">'red'</span>;
+  fontSize = <span class="num">18</span>;
+}</code></pre>
+<div class="card highlight" style="margin-top:1em">
+<p><strong>Interpolation vs Property Binding:</strong></p>
+<pre><code><span class="cmt">&lt;!-- These are equivalent for strings: --&gt;</span>
+&lt;p&gt;{{ message }}&lt;/p&gt;
+&lt;p [textContent]="message"&gt;&lt;/p&gt;
+
+<span class="cmt">&lt;!-- But for non-strings, use binding: --&gt;</span>
+&lt;button [disabled]="isDisabled"&gt;
+  <span class="cmt">&lt;!-- ✅ Correct --&gt;</span>
+&lt;/button&gt;
+&lt;button disabled="{{ isDisabled }}"&gt;
+  <span class="cmt">&lt;!-- ❌ Won't work properly --&gt;</span>
+&lt;/button&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<span class="slide-number">10 / 11</span>
+</section>
+
+<!-- SLIDE 11 – *ngFor -->
+<section class="slide" id="slide-11">
+<div class="slide-inner">
+<span class="day-badge">Day 1</span>
+<h2>🔁 *ngFor – Loop Rendering</h2>
+<div class="divider"></div>
+<div class="def-box">
+<code>*ngFor</code> is a <strong>structural directive</strong> that repeats a template for each item in a list. It's Angular's way of rendering arrays and iterables in the DOM.
+</div>
+<div class="why-box">
+<strong>Why?</strong> Most apps need to display lists — users, products, messages, etc. <code>*ngFor</code> iterates over an array and creates DOM elements for each item automatically.
+</div>
+<div class="two-col">
+<div>
+<h3>Basic Usage</h3>
+<pre><code><span class="cmt">&lt;!-- Basic loop --&gt;</span>
+&lt;ul&gt;
+  &lt;li <span class="dec">*ngFor</span>="let item of items"&gt;
+    {{ item.name }}
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+<span class="cmt">&lt;!-- With index and helpers --&gt;</span>
+&lt;div <span class="dec">*ngFor</span>="let item of items;
+            let i = index;
+            let first = first;
+            let last = last;
+            let even = even"&gt;
+  &lt;span&gt;{{ i + 1 }}. {{ item.name }}&lt;/span&gt;
+  &lt;span *ngIf="first"&gt;(First!)&lt;/span&gt;
+&lt;/div&gt;
+
+<span class="cmt">&lt;!-- trackBy for performance --&gt;</span>
+&lt;li <span class="dec">*ngFor</span>="let item of items;
+          trackBy: trackById"&gt;
+  {{ item.name }}
+&lt;/li&gt;</code></pre>
+</div>
+<div>
+<h3>Component Class</h3>
+<pre><code><span class="kw">export class</span> <span class="tp">ProductComponent</span> {
+  items = [
+    { id: <span class="num">1</span>, name: <span class="str">'Phone'</span>, price: <span class="num">999</span> },
+    { id: <span class="num">2</span>, name: <span class="str">'Laptop'</span>, price: <span class="num">1999</span> },
+    { id: <span class="num">3</span>, name: <span class="str">'Tablet'</span>, price: <span class="num">599</span> }
+  ];
+
+  <span class="fn">trackById</span>(index: <span class="tp">number</span>, item: <span class="tp">any</span>): <span class="tp">number</span> {
+    <span class="kw">return</span> item.id;
+  }
+}</code></pre>
+<h3>Available Local Variables</h3>
+<table>
+<thead><tr><th>Variable</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>index</code></td><td>number</td><td>Index of the current item</td></tr>
+<tr><td><code>first</code></td><td>boolean</td><td>True if first item</td></tr>
+<tr><td><code>last</code></td><td>boolean</td><td>True if last item</td></tr>
+<tr><td><code>even</code></td><td>boolean</td><td>True if even index</td></tr>
+<tr><td><code>odd</code></td><td>boolean</td><td>True if odd index</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="tip-box">
+<strong style="color:var(--green)">Best Practice:</strong> Always use <code>trackBy</code> when rendering large lists. It helps Angular identify which items changed, improving performance by avoiding unnecessary DOM re-renders.
+</div>
+</div>
+<span class="slide-number">11 / 11</span>
+</section>
+
+<!-- Navigation Bar -->
+<nav class="nav-bar" id="navBar">
+<button id="btnPrev" onclick="navigate(-1)">← Previous</button>
+<span class="progress-text" id="progressText">Slide 1 / 12</span>
+<button id="btnNext" onclick="navigate(1)">Next →</button>
+</nav>
+
+<!-- Script -->
+<script>
+(function(){
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+let current=0;
+const progressBar=document.getElementById('progressBar');
+const progressText=document.getElementById('progressText');
+const btnPrev=document.getElementById('btnPrev');
+const btnNext=document.getElementById('btnNext');
+function update(){
+progressText.textContent='Slide '+(current+1)+' / '+total;
+progressBar.style.width=((current+1)/total*100)+'%';
+btnPrev.disabled=current===0;
+btnNext.disabled=current===total-1;
+}
+function goTo(i){
+if(i<0||i>=total)return;
+current=i;
+slides[current].scrollIntoView({behavior:'smooth',block:'start'});
+update();
+}
+window.navigate=function(d){goTo(current+d)};
+document.addEventListener('keydown',function(e){
+if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();navigate(1)}
+else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();navigate(-1)}
+else if(e.key==='Home'){e.preventDefault();goTo(0)}
+else if(e.key==='End'){e.preventDefault();goTo(total-1)}
+});
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+const idx=Array.from(slides).indexOf(entry.target);
+if(idx!==-1){current=idx;update()}
+}
+});
+},{threshold:0.5});
+slides.forEach(s=>observer.observe(s));
+update();
+})();
+</script></body></html>

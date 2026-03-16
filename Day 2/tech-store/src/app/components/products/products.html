@@ -1,0 +1,11 @@
+<h2>{{ storeName }} - Our Products</h2>
+
+<div class="d-flex flex-wrap">
+  <div *ngFor="let product of products" class="m-3">
+    <img [src]="product.imageUrl" alt="" />
+    <h3>{{ product.name }}</h3>
+    <p>Showing the price: Price $ {{ product.price }}</p>
+    <span>{{ product.inStock ? 'In Stock ✅' : 'Out of Stock ❌' }} </span>
+    <button [disabled]="!product.inStock">Buy Now</button>
+  </div>
+</div>
